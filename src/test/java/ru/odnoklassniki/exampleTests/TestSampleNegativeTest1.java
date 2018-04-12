@@ -1,4 +1,4 @@
-package ru.odnoklassniki.stringSorter;
+package ru.odnoklassniki.exampleTests;
 
 import org.junit.Assert;
 import org.junit.Test;

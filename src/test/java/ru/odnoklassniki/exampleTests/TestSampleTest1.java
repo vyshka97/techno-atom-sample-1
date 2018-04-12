@@ -1,4 +1,4 @@
-package ru.odnoklassniki.stringSorter;
+package ru.odnoklassniki.exampleTests;
 
 import org.junit.After;
 import org.junit.AfterClass;
