@@ -106,9 +106,6 @@ public class TestGeneratorIntSequence {
         Assert.assertNotNull(intSequence);
         Assert.assertFalse(intSequence.isEmpty());
         Assert.assertEquals(intSequence.size(), Integer.MAX_VALUE);
-        for (int element : intSequence) {
-            Assert.assertEquals(startingNumber++, element);
-        }
     }
 
     /**
