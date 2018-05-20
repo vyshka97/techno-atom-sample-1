@@ -1,5 +1,12 @@
 package homework;
 
+import org.junit.Assert;
+import org.junit.Test;
+import ru.odnoklassniki.ClassToBeTested;
+
+import java.util.List;
+import java.util.logging.Logger;
+
 /**
  * Created by Maxim Vyshegorodtsev
  *
@@ -16,10 +23,10 @@ package homework;
  *
  * Чек-лист
  *
- * 1. Проверка метода на выброс исключения, если в первый аргумент передать
- *    число меньше 0
+ * 1. Проверка метода на выброс исключения, если во второй аргумент передать
+ *    число меньшее 0
  *
- * 2. Проверка метода на выброс исключения, если в первый аргумент передать 0
+ * 2. Проверка метода на выброс исключения, если во второй аргумент передать 0
  *
  * 3. Проверка метода на выброс исключения, если сумма двух аргументов будет
  *    больше допустимого максимального значения для типа Integer
@@ -31,48 +38,47 @@ package homework;
  *    меньше либо равно максимальному допустимому значению для типа Integer
  *
  */
-
-import org.junit.Assert;
-import org.junit.Test;
-import ru.odnoklassniki.ClassToBeTested;
-
-import java.util.List;
-import java.util.Random;
-
-
 public class TestGeneratorIntSequence {
+    private static final int STARTING_NUMBER = 0;
+    private static final Logger LOGGER = Logger.getLogger(TestGeneratorIntSequence.class.getSimpleName());
+    private static final String ITEMS_COUNT_ERROR_MESSAGE = "itemsCount must be greater than 0";
+    private static final String GENERATOR_ERROR_MESSAGE = "can't generate an int greater than integer's max value";
 
     /**
-     * Проверка метода на выброс исключения, если в первый аргумент передать
-     * число меньше 0
+     * Проверка метода на выброс исключения, если во второй аргумент передать
+     * число меньшее 0
      */
     @Test
     public void testThrowingExceptionIfItemsCountIsLessZero() {
-        Random random = new Random();
+        LOGGER.info("Вызовем метод, передав во второй аргумент отрицательное число");
         try {
-            ClassToBeTested.generateIntSequence(random.nextInt(), -random.nextInt(Integer.MAX_VALUE) - 2);
-            Assert.fail();
+            ClassToBeTested.generateIntSequence(STARTING_NUMBER, -2);
+            Assert.fail("Метод не кидает ошибку при вызове метода с отрицательным вторым аргументом");
         }
 
         catch (IllegalArgumentException ex) {
-            Assert.assertEquals("itemsCount must be greater than 0", ex.getMessage());
+            LOGGER.info("Получили ошибку, проверим ее текст");
+            Assert.assertEquals("Метод бросает другую ошибку", ITEMS_COUNT_ERROR_MESSAGE, ex.getMessage());
         }
+        LOGGER.info("Метод выбрасывает ошибку");
     }
 
     /**
-     * Проверка метода на выброс исключения, если в первый аргумент передать 0
+     * Проверка метода на выброс исключения, если во второй аргумент передать 0
      */
     @Test
     public void testThrowingExceptionIfItemsCountIsZero() {
-        Random random = new Random();
+        LOGGER.info("Вызовем метод, передав во второй аргумент 0");
         try {
-            ClassToBeTested.generateIntSequence(random.nextInt(), 0);
-            Assert.fail();
+            ClassToBeTested.generateIntSequence(STARTING_NUMBER, 0);
+            Assert.fail("Метод не кидает ошибку при вызове метода с нулевым вторым параметром");
         }
 
         catch (IllegalArgumentException ex) {
-            Assert.assertEquals("itemsCount must be greater than 0", ex.getMessage());
+            LOGGER.info("Получили ошибку, проверим ее текст");
+            Assert.assertEquals("Метод бросает другую ошибку", ITEMS_COUNT_ERROR_MESSAGE, ex.getMessage());
         }
+        LOGGER.info("Метод выбрасывает ошибку");
     }
 
     /**
@@ -81,18 +87,17 @@ public class TestGeneratorIntSequence {
      */
     @Test
     public void testThrowingExceptionIfSumIsGreaterMaxInteger() {
-        int min = Integer.MAX_VALUE / 2 + 1;
-        int max = Integer.MAX_VALUE;
-        int randomNumber1 = (int) (Math.random() * (max - min)) + min;
-        int randomNumber2 = (int) (Math.random() * (max - min)) + min;
+        LOGGER.info("Вызовем метод так, чтобы сумма двух переданных параметров была больше Integer.MAX_VALUE");
         try {
-            ClassToBeTested.generateIntSequence(randomNumber1, randomNumber2);
-            Assert.fail();
+            ClassToBeTested.generateIntSequence(STARTING_NUMBER + 1, Integer.MAX_VALUE);
+            Assert.fail("Метод не кидает ошибку, если сумма двух аргументов больше Integer.MAX_VALUE");
         }
 
         catch (IllegalArgumentException ex) {
-            Assert.assertEquals("can't generate an int greater than integer's max value", ex.getMessage());
+            LOGGER.info("Получили ошибку, проверим ее текст");
+            Assert.assertEquals("Метод бросает другую ошибку", GENERATOR_ERROR_MESSAGE, ex.getMessage());
         }
+        LOGGER.info("Метод бросает ошибку");
     }
 
     /**
@@ -101,11 +106,15 @@ public class TestGeneratorIntSequence {
      */
     @Test
     public void testCorrectIntSequenceIfSumIsMaxInteger() {
-        int startingNumber = 0;
-        List<Integer> intSequence = ClassToBeTested.generateIntSequence(startingNumber, Integer.MAX_VALUE);
-        Assert.assertNotNull(intSequence);
-        Assert.assertFalse(intSequence.isEmpty());
-        Assert.assertEquals(intSequence.size(), Integer.MAX_VALUE);
+        LOGGER.info("Вызовем метод так, чтобы сумма двух параметров равнялась Integer.MAX_VALUE");
+        List<Integer> intSequence = ClassToBeTested.generateIntSequence(STARTING_NUMBER, Integer.MAX_VALUE);
+
+        LOGGER.info("Проверим, что метод на сгенерировал валидную последовательность");
+        Assert.assertNotNull("Метод вернул null", intSequence);
+        Assert.assertFalse("Метод вернул пустую последовательность", intSequence.isEmpty());
+        Assert.assertEquals("Размер последовательности не совпадает с переданным параметром", intSequence.size(), Integer.MAX_VALUE);
+
+        LOGGER.info("Метод возвращает валидную последовательность");
     }
 
     /**
@@ -115,14 +124,21 @@ public class TestGeneratorIntSequence {
 
     @Test
     public void testCorrectIntSequence() {
-        int startingNumber = -5;
-        List<Integer> intSequence = ClassToBeTested.generateIntSequence(startingNumber, 4);
-        Assert.assertNotNull(intSequence);
-        Assert.assertFalse(intSequence.isEmpty());
-        Assert.assertEquals(intSequence.size(), 4);
+        LOGGER.info("Вызовем метод так, чтобы сумма двух параметров была меньше Integer.MAX_VALUE");
+        int startingNumber = STARTING_NUMBER;
+        List<Integer> intSequence = ClassToBeTested.generateIntSequence(STARTING_NUMBER, 4);
+
+        LOGGER.info("Проверим, что метод на сгенерировал валидную последовательность");
+        Assert.assertNotNull("Метод вернул null", intSequence);
+        Assert.assertFalse("Метод вернул пустую последовательность", intSequence.isEmpty());
+        Assert.assertEquals("Размер последовательности не совпадает с переданным параметром", intSequence.size(), 4);
+
+        LOGGER.info("Проверим, что все элементы последовательности правильные");
         for (int element : intSequence) {
-            Assert.assertEquals(startingNumber++, element);
+            Assert.assertEquals("Элементы не совпадают", startingNumber++, element);
         }
+
+        LOGGER.info("Метод возвращает правильную последовательность");
     }
 
 
